@@ -31,12 +31,37 @@
         function convertToPNG() {
             const latexInput = document.getElementById("latexInput").value;
 
-            // Construct the QuickLaTeX API URL
-            const apiUrl = `https://quicklatex.com/latex3.f?formula=${encodeURIComponent(latexInput)}`;
+            // Check if the LaTeX input is empty
+            if (latexInput.trim() === "") {
+                alert("Please enter a LaTeX formula.");
+                return;
+            }
 
-            // Display the generated PNG on the page
-            const outputDiv = document.getElementById("output");
-            outputDiv.innerHTML = `<img src="${apiUrl}" alt="Generated PNG">`;
+            // Trigger the GitHub Actions workflow manually
+            fetch("https://api.github.com/repos/your-username/your-repository/dispatches", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer YOUR_GITHUB_TOKEN",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    event_type: "workflow_dispatch",
+                    client_payload: {
+                        latex: latexInput,
+                    },
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Display success message or handle the response as needed
+                alert("Workflow triggered successfully.");
+            })
+            .catch(error => console.error("Error:", error));
         }
     </script>
 </body>
