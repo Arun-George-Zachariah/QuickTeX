@@ -4,65 +4,109 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LaTeX to PNG Converter</title>
+    <!-- MathJax script for rendering LaTeX -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <!-- html2canvas script for converting HTML to PNG -->
+    <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
+
+        h1 {
+            color: #333;
+        }
+
         textarea {
             width: 80%;
-            height: 150px;
+            height: 100px;
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
         }
-        img {
+
+        #outputContainer {
             margin-top: 20px;
-            max-width: 100%;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none; /* Initially hide the output container */
+        }
+
+        #renderButton {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        #downloadButton {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <h1>LaTeX to PNG Converter</h1>
-    <label for="latexInput">Enter LaTeX:</label><br>
-    <textarea id="latexInput"></textarea><br>
-    <button onclick="convertToPNG()">Convert to PNG</button>
+
+<h1>LaTeX to PNG Converter</h1>
+
+<textarea id="latexInput" placeholder="Enter your LaTeX code here"></textarea>
+
+<button id="renderButton" onclick="generateText()">Render</button>
+
+<div id="outputContainer">
     <div id="output"></div>
+</div>
 
-    <script>
-        function convertToPNG() {
-            const latexInput = document.getElementById("latexInput").value;
+<button id="downloadButton" onclick="downloadPNG()">Download PNG</button>
 
-            // Check if the LaTeX input is empty
-            if (latexInput.trim() === "") {
-                alert("Please enter a LaTeX formula.");
-                return;
-            }
+<script type="text/javascript">
+    function generateText() {
+        // Get the LaTeX input from the textarea
+        var latexCode = document.getElementById('latexInput').value;
 
-            // Trigger the GitHub Actions workflow manually
-            fetch("https://api.github.com/repos/your-username/your-repository/dispatches", {
-                method: "POST",
-                headers: {
-                    "Authorization": "Bearer YOUR_GITHUB_TOKEN",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    event_type: "workflow_dispatch",
-                    client_payload: {
-                        latex: latexInput,
-                    },
-                }),
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Display success message or handle the response as needed
-                alert("Workflow triggered successfully.");
-            })
-            .catch(error => console.error("Error:", error));
-        }
-    </script>
+        // Render the LaTeX code using MathJax
+        var outputDiv = document.getElementById('output');
+        outputDiv.innerHTML = '$$' + latexCode + '$$';
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, outputDiv]);
+        
+        // Show the output container
+        var outputContainer = document.getElementById('outputContainer');
+        outputContainer.style.display = 'block';
+
+        // Show the "Download PNG" button
+        var downloadButton = document.getElementById('downloadButton');
+        downloadButton.style.display = 'inline-block';
+    }
+
+    function downloadPNG() {
+        // Use html2canvas to convert the rendered LaTeX to a PNG image
+        var outputDiv = document.getElementById('output');
+        html2canvas(outputDiv).then(function (canvas) {
+            // Create a data URL from the canvas and set it as the href of a download link
+            var dataURL = canvas.toDataURL('image/png');
+            var downloadLink = document.createElement('a');
+            downloadLink.href = dataURL;
+            downloadLink.download = 'latex_output.png';
+            downloadLink.click();
+        });
+    }
+</script>
+
 </body>
 </html>
