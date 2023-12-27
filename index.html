@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaTeX to PNG Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        textarea {
+            width: 80%;
+            height: 150px;
+        }
+        img {
+            margin-top: 20px;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>LaTeX to PNG Converter</h1>
+    <label for="latexInput">Enter LaTeX:</label><br>
+    <textarea id="latexInput"></textarea><br>
+    <button onclick="convertToPNG()">Convert to PNG</button>
+    <div id="output"></div>
+
+    <script>
+        function convertToPNG() {
+            const latexInput = document.getElementById("latexInput").value;
+
+            // Construct the QuickLaTeX API URL
+            const apiUrl = `https://quicklatex.com/latex3.f?formula=${encodeURIComponent(latexInput)}`;
+
+            // Display the generated PNG on the page
+            const outputDiv = document.getElementById("output");
+            outputDiv.innerHTML = `<img src="${apiUrl}" alt="Generated PNG">`;
+        }
+    </script>
+</body>
+</html>
