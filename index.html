@@ -4,109 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LaTeX to PNG Converter</title>
-    <!-- MathJax script for rendering LaTeX -->
-    <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
-    <!-- html2canvas script for converting HTML to PNG -->
+    <link rel="icon" href="img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="styles/style.css" /> 
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        h1 {
-            color: #333;
-        }
-
-        textarea {
-            width: 80%;
-            height: 100px;
-            margin: 10px;
-            padding: 10px;
-            font-size: 16px;
-        }
-
-        #outputContainer {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: none; /* Initially hide the output container */
-        }
-
-        #renderButton {
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        
-        #downloadButton {
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-            display: none;
-        }
-    </style>
+    <script type="text/javascript" src="scripts/render.js"></script>
 </head>
 <body>
-
-<h1>LaTeX to PNG Converter</h1>
-
-<textarea id="latexInput" placeholder="Enter your LaTeX code here"></textarea>
-
-<button id="renderButton" onclick="generateText()">Render</button>
-
-<div id="outputContainer">
-    <div id="output"></div>
-</div>
-
-<button id="downloadButton" onclick="downloadPNG()">Download PNG</button>
-
-<script type="text/javascript">
-    function generateText() {
-        // Get the LaTeX input from the textarea
-        var latexCode = document.getElementById('latexInput').value;
-
-        // Render the LaTeX code using MathJax
-        var outputDiv = document.getElementById('output');
-        outputDiv.innerHTML = '$$' + latexCode + '$$';
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub, outputDiv]);
-        
-        // Show the output container
-        var outputContainer = document.getElementById('outputContainer');
-        outputContainer.style.display = 'block';
-
-        // Show the "Download PNG" button
-        var downloadButton = document.getElementById('downloadButton');
-        downloadButton.style.display = 'inline-block';
-    }
-
-    function downloadPNG() {
-        // Use html2canvas to convert the rendered LaTeX to a PNG image
-        var outputDiv = document.getElementById('output');
-        html2canvas(outputDiv).then(function (canvas) {
-            // Create a data URL from the canvas and set it as the href of a download link
-            var dataURL = canvas.toDataURL('image/png');
-            var downloadLink = document.createElement('a');
-            downloadLink.href = dataURL;
-            downloadLink.download = 'latex_output.png';
-            downloadLink.click();
-        });
-    }
-</script>
-
+	<div class="header">
+	    <div class="link-container">
+	    	<h2 class="float-left"><a style="color: inherit; text-decoration:none" class="float-right" href="https://arun-george-zachariah.github.io/QuickTeX">Quick TeX</a></h2>
+	    	<h2><a class="float-right" href="https://github.com/Arun-George-Zachariah/QuickTeX"><img src="https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" alt="GitHub" width="50" height="50"></a></h2>
+	  	</div>
+	</div>
+	
+	<div class="container">
+	    <h2>Render Your LaTeX Equations as PNG Images</h2>
+	
+	    <p>
+	        Welcome to Quick TeX. This simple tool allows you to enter your LaTeX equations
+	        in the text area below, click the "Render" button, and instantly see the rendered output. You can
+	        then download the result as a PNG image for use in your documents, presentations, or anywhere else.
+	        Try it out now and make your LaTeX equations come to life!
+	    </p>
+	
+	    <textarea id="latexInput" placeholder="Enter your LaTeX code here"></textarea>
+	
+	    <div class="button-container">
+	        <button id="renderButton" onclick="generateText()">Render</button>
+	    </div>
+	
+	    <div id="outputContainer">
+	        <div id="output"></div>
+	    </div>
+	    
+	    <div class="button-container">
+	        <button id="downloadButton" onclick="downloadPNG()">Download PNG</button>
+	    </div>
+	</div>
 </body>
 </html>
